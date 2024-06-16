@@ -1,0 +1,28 @@
+.shape {
+  height: 0;
+  width: 0;
+}
+.shapeTop {
+  @extend .shape;
+  border-bottom: 30px solid black;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+}
+.shapeBottom {
+  @extend .shape;
+  border-top: 30px solid black;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+}
+.shapeLeft {
+  @extend .shape;
+  border-right: 30px solid black;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+.shapeRight {
+  @extend .shape;
+  border-left: 30px solid black;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
