@@ -31,3 +31,23 @@ For more information, see the [course curriculum](https://nextjs.org/learn) on t
 # Atomic Components
 
 - Next.js 는 `img`, `a` 태그 대신 Image`, `Link` 와 같은 Atomic 컴포넌트를 사용해 구현하도록 한다.
+
+# Hooks
+
+`/dashboard/invoices?page=1&query=pending`이 주어질 때
+
+- `usePathname`: `/dashboard/invoices`를 반환.
+- `useSearchParams`: ReadonlyURLSearchParams 타입의 `{ page: '1', query: 'pending' }`을 반환.
+  `get()`, `getAll()`메서드를 사용해 데이터에 접근. URLSearchParams 에 parameter 로 넣어 인스턴스 
+  생성이 가능하다.
+- `useRouter`: Client components 간에 프로그래밍을 사용한 네비게이션을 처리.
+
+---
+
+# URL search params 를 사용할 때 얻는 이점
+
+- Bookmarkable and Shareable URLs: 앱의 상태를 북마크하거나 공유할 수 있다.
+- Server-Side Rendering and Initial Load: URL 파라미터는 서버에서 초기 상태를 렌더링 하는데 즉시 사용될 수 있어 
+  서버 렌더링을 다루기 쉽게 한다.
+- Analytics and Tracking: 'Search queries' 와 'Filter' 를 직접 URL 에 넣으면 Client-Side 에 추가적인 로직 
+  없이도 사용자의 행동을 추적할 수 있다.
