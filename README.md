@@ -42,6 +42,11 @@ For more information, see the [course curriculum](https://nextjs.org/learn) on t
   생성이 가능하다.
 - `useRouter`: Client components 간에 프로그래밍을 사용한 네비게이션을 처리.
 
+# Directives
+
+- `'use client'`: event listeners, hooks 를 사용할 수 있다.
+- `'use server'`: 클라이언트 컴포넌트, 서버 컴포넌트 모두에서 import 가능하다. 
+
 ---
 
 # URL search params 를 사용할 때 얻는 이점
@@ -51,3 +56,33 @@ For more information, see the [course curriculum](https://nextjs.org/learn) on t
   서버 렌더링을 다루기 쉽게 한다.
 - Analytics and Tracking: 'Search queries' 와 'Filter' 를 직접 URL 에 넣으면 Client-Side 에 추가적인 로직 
   없이도 사용자의 행동을 추적할 수 있다.
+
+# Server Actions
+
+### 오직 'use server'만 가능
+
+form 의 action 을 다루기 위한 위 코드는 Server Action 으로 오직 서버 컴포넌트로만 존재할 수 있다. 이 말은 'useState', 
+'use Effect', 'event listener' 와 같은 것을 사용할 수 없다는 것을 의미한다.
+
+### 민감한 데이터 다루기
+
+Serverless Functions 와 같은 역할을 하지만, API endpoint 를 직접 만들 필요가 없다! Server Actions 는 내부적으로 
+`Post` API endpoint 를 생성한다.
+
+FormData 에 UUID 와 같은 노출되어서는 안 되는 데이터를 Server Action 에 보낼 때는
+`<input type="hidden" name="id" value={invoice.id} />` 가 아니라
+
+```tsx
+const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
+return <form action={updateInvoiceWithId}></form>;
+```
+
+와 같이 HTML 에 노출되지 않도록 전달한다.
+
+### Server Action 이 종료될 때
+
+- `revalidatePath(originalPath:)`; revalidate the Next.js cache
+- `redirect(url:)`; redirect the user to a new page
+
+를 적절히 사용해주도록 한다.
