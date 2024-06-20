@@ -29,8 +29,8 @@ export async function createInvoice(formData: FormData) {
     VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
   `;
 
-  revalidatePath('/dashboard/invoices'); // revalidate & fresh data fetch
-  redirect('/dashboard/invoices'); // navigate page
+  revalidatePath('/dashboard/invoices'); // revalidate the Next.js cache
+  redirect('/dashboard/invoices'); // redirect the user to a new page
 }
 
 /* Update Invoice */
@@ -52,4 +52,15 @@ export async function updateInvoice(id: string, formData: FormData) {
 
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
+}
+
+/* Delete Invoice */
+
+export async function deleteInvoice(id: string) {
+  await sql`
+    DELETE FROM invoices
+    WHERE id = ${id}
+  `;
+
+  revalidatePath('/dashboard/invoice');
 }
