@@ -21,6 +21,12 @@ For more information, see the [course curriculum](https://nextjs.org/learn) on t
     하나의 그룹으로 묶으려면 Wrapper 컴포넌트를 생성한다(이를 Partial Prerendering 이라 하며, 적용하고자 하는 컴포넌트를 
     Suspense boundary 로 감싸고 fallback 을 제공한 다음 데이터 fetch 를 컴포넌트 안으로 내려준다. 그리고 fetch 함수는 
     시작할 때 unstable_noStore 함수를 호출해 컴포넌트를 dynamic 으로 만들어준다). 
+- `error.tsx`: 모든 에러의 fallback UI 로 사용된다. 오직 'use client' 만 가능하다.
+- `not-found.tsx`: `notFound()` 함수에 의해 호출되어 404 에러의 fallback UI 로 사용된다.
+
+
+Next.js 의 모든 파일 컨벤션은 [api-reference/file-conventions](https://nextjs.org/docs/app/api-reference/file-conventions) 
+에서 확인할 수 있다.
 
 # Styles
 
