@@ -49,12 +49,11 @@ export function DeleteInvoice({ id }: { id: string }) {
             message="Do you want to delete this invoice?"
             onCancel={() => setOpenConfirm(false)}
           >
-            <form
-              action={deleteInvoiceWithId}
-              className="w-1/2"
-              onSubmit={() => setOpenConfirm(false)}
-            >
-              <button className="h-10 w-full items-center rounded-lg bg-red-500 px-4 text-sm text-white hover:bg-red-400">
+            <form action={deleteInvoiceWithId} className="w-1/2">
+              <button
+                className="h-10 w-full items-center rounded-lg bg-red-500 px-4 text-sm text-white hover:bg-red-400"
+                onSubmit={() => setOpenConfirm(false)}
+              >
                 OK
               </button>
             </form>
