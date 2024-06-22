@@ -9,30 +9,60 @@ import { redirect } from 'next/navigation';
 
 const FormSchema = z.object({
   id: z.string(),
-  customerId: z.string(),
+  customerId: z.string({
+    invalid_type_error: 'Please select a customer.',
+  }),
   // input type="number" 가 실제로는 number 가 아닌 string 을 반환하기 때문에 z.number() 를 사용하면 에러 발생
-  amount: z.coerce.number(),
-  status: z.enum(['pending', 'paid']),
+  amount: z.coerce
+    .number()
+    .gt(0, { message: 'Please enter an amount greater than $0.' }),
+  status: z.enum(['pending', 'paid'], {
+    invalid_type_error: 'Please select an invoice status.',
+  }),
   date: z.string(),
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function createInvoice(formData: FormData) {
+export type State = {
+  message?: string | null;
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+};
+
+export async function createInvoice(prevState: State, formData: FormData) {
+  // Step 1. Validate form using Zod
   const rawFormData = Object.fromEntries(formData.entries());
-  const { customerId, amount, status } = CreateInvoice.parse(rawFormData);
+  const validatedFields = CreateInvoice.safeParse(rawFormData);
+
+  // Step 2. If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      message: 'Missing Fields. Failed to Create Invoice.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  // Step 3. Prepare data for insertion into the database
+  const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split('T')[0];
 
+  // Step 4. Insert data into the database
   try {
     await sql`
     INSERT INTO invoices (customer_id, amount, status, date)
     VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
   `;
   } catch (error) {
+    // If a database error occurs, return a more specific error.
     return { message: 'Database Error: Failed to Create Invoice.' };
   }
 
+  // Step 5. Revalidate the cache for the invoices page and redirect the user.
   revalidatePath('/dashboard/invoices'); // revalidate the Next.js cache
   redirect('/dashboard/invoices'); // redirect the user to a new page
 }
