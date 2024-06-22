@@ -92,3 +92,35 @@ return <form action={updateInvoiceWithId}></form>;
 - `redirect(url:)`; redirect the user to a new page
 
 를 적절히 사용해주도록 한다.
+
+### Form Validation
+
+- Client-Side validation: `required`만 붙여주면 브라우저가 기본적으로 validation check 를 해준다. 쉽지만
+  이를 우회하는 공격에 무용지물이며, 서버에서 다시 검증해야 하므로 validation check 코드가 2개가 되므로 양쪽을 모두
+  관리 해야한다.
+- Server-Side validation: Client-Side validation check 를 우회하는 공격을 막아낼 수 있으며, 서버 에서
+  하나의 소스로 관리한다.
+
+- 여기서 Client Component 에서는 React 19 에 출시될 `useActionState` 훅을 사용했다.
+  이 훅은 `(action, initialState)`를 arguments 로 받아 `[state, formAction]`을 반환한다.
+- Server Action 에서는 `zod`의 기능을 사용한다. zod 는 단순히 타입 검증 뿐 아니라 검증 실패에 따라 각 필드별
+  validation 실패에 따른 메시지를 객체로 생성한다.
+
+`actions.ts`와 `create-form.tsx`, `edit-form.tsx` 파일을 보자. `useActionState(action:initialState)` 
+함수는 2개의 파라미터를 받는다.  
+그리고 이 `action`은 `(state: Awaited<State>, payload: FormData) => (Promise<State> | State)` 형태를 
+파라미터로 받도록 되어 있다.
+
+그런데 기존의 `createInvoice`와 `updateInvoice` action 함수는 다음과 같다.
+
+- `createInvoice(formData:)`
+- `updateInvoice(id:formData:)`
+
+1. `useActionState`에 전달할 action 함수는 `action(state:payload:)`이어야 하므로,  
+   `createInvoice(formData:)`는 `createInvoice(prevState:formData:)`로 변경하면 된다.
+
+2. 그런데 `updateInvoice(id:formData:)`는 `id`를 받아야하므로 파라미터 순서를 다음과 같이 만들어야한다. 
+   `updateInvoice(id:formData:)`를 `updateInvoice(id:prevState:formData:)`로 변경하고  
+   `const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);`를 통해 바인딩 시켜 새 action 
+   함수를 만들면  
+   `updateInvoiceWithId(prevState:formData:)`는 이제 `useActionState`에 전달할 action 함수의 형태가 된다.
