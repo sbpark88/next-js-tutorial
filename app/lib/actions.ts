@@ -71,11 +71,28 @@ export async function createInvoice(prevState: State, formData: FormData) {
 
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function updateInvoice(id: string, formData: FormData) {
+export async function updateInvoice(
+  id: string,
+  prevState: State,
+  formData: FormData,
+) {
+  // Step 1. Validate form using Zod
   const rawFormData = Object.fromEntries(formData.entries());
-  const { customerId, amount, status } = UpdateInvoice.parse(rawFormData);
+  const validatedFields = UpdateInvoice.safeParse(rawFormData);
+
+  // Step 2. If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      message: 'Missing Fields. Failed to Update Invoice.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  // Step 3. Prepare data for update into the database
+  const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
 
+  // Step 4. Insert data into the database
   try {
     await sql`
       UPDATE invoices
@@ -88,6 +105,7 @@ export async function updateInvoice(id: string, formData: FormData) {
     return { message: 'Database Error: Failed to Update Invoice.' };
   }
 
+  // Step 5. Revalidate the cache for invoices page and redirect the user.
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
