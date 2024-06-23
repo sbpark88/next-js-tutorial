@@ -124,3 +124,62 @@ return <form action={updateInvoiceWithId}></form>;
    `const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);`를 통해 바인딩 시켜 새 action 
    함수를 만들면  
    `updateInvoiceWithId(prevState:formData:)`는 이제 `useActionState`에 전달할 action 함수의 형태가 된다.
+
+---
+
+# NextAuth
+
+`useActionState`와 마찬가지로 Next.js 14 에 추가될 예정으로, Next.js 앱에 세션을 관리하고, 
+로그인(sign-in, sign-out), 그 외 다른 인증 관련된 것들을 추상화 시켜 간단한 절차로 통일된 솔루션을 제공한다.
+
+```shell
+pnpm i next-auth@beta
+```
+
+앱에서 사용할 암호키를 생성해야한다.
+
+```shell
+openssl rand -base64 32
+```
+
+이 암호키는 앱에서 쿠키를 암호화하고, 사용자 세션의 보안을 보장하는 데 사용된다. 이재 `.env`파일에 위에서 생성한 암호키를 
+추가해야한다.
+
+- `.env`
+
+```shell
+AUTH_SECRET=your-secret-key
+```
+
+- https://authjs.dev/getting-started/authentication
+- https://authjs.dev/reference/nextjs#nextauthconfig
+- https://authjs.dev/reference/nextjs#pages
+- https://authjs.dev/reference/nextjs#callbacks
+- https://authjs.dev/reference/nextjs#providers
+- https://nextjs.org/docs/app/building-your-application/routing/middleware
+
+이 외에도 전체 문서에서 필요한 부분을 검색해 사용해야하나, 이 튜토리얼을 진행하며 프로젝트에서 참고한 레퍼런스는 위와 같다.
+
+### auth.config.ts & auth.ts
+
+`auth.config.ts`는 기본 설정값을 저장하는 config 파일로 `middleware`와 `auth.ts`에서 사용한다. 
+`auth.ts`는 config 를 불러와 Spread Operator 로 복사하고 필요한 부분을 수정해 사용한다. 
+따라서, 두 파일을 모두 봐야 한다. 
+
+### middleware.ts
+
+각 페이지나 파일 등 리소스를 요청할 때마다 인증 검증을 위해 `middleware`를 반드시 사용해야한다. 필요한 함수는 
+NextAuth 에 모두 들어 있으므로 `auth.config.ts`를 가져와 필요한 인스턴스를 생성하고, 적용할 리소스를 명시하면 된다.
+
+```typescript
+export default NextAuth(authConfig).auth;
+```
+
+### Providers
+
+4 종류가 제공된다.
+
+- OAuth: Google, GitHub, Twitter, etc.
+- Magic Links: Resend, Sendgrid, Nodemailer, Postmark, etc.
+- Credentials: Email/PW 를 사용해 직접 인증.
+- WebAuthn: 실험적 기능으로 아직 production 에서 사용은 권장하지 않음.
