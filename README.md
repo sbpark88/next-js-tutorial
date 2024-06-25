@@ -4,6 +4,9 @@ This is the starter template for the Next.js App Router Course. It contains the 
 
 For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
 
+[Demo](https://my-next-tutorial.vercel.app/) 페이지를 통해 접근할 수 있으며, 로그인 계정의 아이디와 비밀번호는  
+'user@nextmail.com' / '123456' 이다.
+
 ---
 
 # Routes
@@ -235,6 +238,14 @@ export default NextAuth(authConfig).auth;
 
 어떤 방법을 사용하든 Next.js 는 자동으로 `head` 태그 안에 내장시킨다.
 
+---
+
+# Starter Templates
+
+[https://vercel.com/templates/next.js](https://vercel.com/templates/next.js) 에 가면 Vercel 에서 제공하는 
+다양한 Next.js 로 만든 탬플릿이 존재한다.
+
+![Starter Templates](/excerpt_image.png)
 
 
 
