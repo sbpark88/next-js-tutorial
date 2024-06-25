@@ -183,3 +183,60 @@ export default NextAuth(authConfig).auth;
 - Magic Links: Resend, Sendgrid, Nodemailer, Postmark, etc.
 - Credentials: Email/PW 를 사용해 직접 인증.
 - WebAuthn: 실험적 기능으로 아직 production 에서 사용은 권장하지 않음.
+
+---
+
+# Metadata
+
+사용자에게 보이지 않지만 중요한 정보를 주로 `head` 태그 안에 내장시켜 검색 엔진이나 소셜 미디어 등 웹을 더 잘 이해할 
+수 있도록 HTML 페이지에 내장된 정보를 `Metadata` 라 한다. 
+
+### Title Metadata
+
+가장 기본적인 메타데이터로 브라우저의 탭에 이름을 보이게 할 뿐 아니라, 검색 엔진이 웹페이지에 대해 이해하는 데 도움을 
+줘 SEO 에 매우 중요한 역할을 한다.
+
+```html
+<title>Page Title</title>
+```
+
+### Description Metadata
+
+이 메타데이터는 웹 페이지 콘텐츠에 대한 간략한 개요를 제공하며 종종 검색 엔진 결과에 표시된다.
+
+```html
+<meta name="keyword" content="keyword1, keyword2, keyword3" />>
+```
+
+### Open Group Metadata
+
+이 메타데이터는 웹 페이지가 소셜 미디어 플랫폼에 공유될 때 'title', 'description', 'image' 와 같은 정보를 제공해 
+표시되는 방법을 향상시킨다.
+
+```html
+<meta property="og:title" content="Title Here" />
+<meta property="og:description" content="Description Here" />
+<meta property="og:image" content="image_url_here" />
+```
+
+### Favicon Metadata
+
+이 메타데이터는 브라우저의 주소 바 또는 탭에 표시될 `favicon`이라 불리는 작은 아이콘 이미지에 대한 링크를 제공한다.
+
+### Adding metadata in Next.js
+
+- Config-based: `layout.tsx` 또는 `page.tsx`에서 [static `metatdata` object] 또는 dynamic 
+  [`generateMetadata` function] 을 export 한다.
+- File-based: metadata 목적으로 사용되는 특별한 파일 이름을 사용한다.
+  - `favicon.ico`, `apple-icon.jpg`, `icon.jpg`: favicon 또는 icon 으로 사용된다.
+  - `opengraph-image.jpg`, `twitter-image.jpg`: 소셜 미디어에 사용된다.
+  - `robots.txt`: 검색 엔진 크롤링에 정보를 제공한다.
+  - `sitemap.xml`: 웹사이트 구조에 대한 정보를 제공한다.
+
+어떤 방법을 사용하든 Next.js 는 자동으로 `head` 태그 안에 내장시킨다.
+
+
+
+
+[static `metatdata` object]:https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadata-object
+[`generateMetadata` function]:https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function

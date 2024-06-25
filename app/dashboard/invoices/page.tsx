@@ -10,6 +10,9 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Invoices',
+  alternates: {
+    canonical: '/dashboard/invoices',
+  },
 };
 
 export default async function Page({
